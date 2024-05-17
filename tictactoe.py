@@ -1,4 +1,4 @@
-from random import choice
+from random import choice, randint
 import inspect
 
 
@@ -11,7 +11,6 @@ class Cell:
 
 
 class TicTacToe:
-    FREE_CELL = 0  # свободная клетка
     HUMAN_X = 1  # крестик (игрок - человек)
     COMPUTER_O = 2  # нолик (игрок - компьютер)
 
@@ -20,6 +19,7 @@ class TicTacToe:
         self.__coords_cell = [(i, j) for j in range(self.__n) for i in range(self.__n)]
         self.pole = tuple(tuple(Cell() for _ in range(self.__n)) for _ in range(self.__n))
         self.__is_human_win = self.__is_computer_win = self.__is_draw = False
+        self.welcome = True
 
     @property
     def is_human_win(self):
@@ -37,15 +37,25 @@ class TicTacToe:
         self.__init__()
 
     def human_go(self):
-        x, y = map(int, input('Ваш ход: ').split())
+        while True:
+            user_input = input('-> Ваш ход : ').strip()
+            if len(user_input) == 2 and all(i.isdigit() for i in user_input):
+                x, y = map(int, user_input)
+                x -= 1
+                y -= 1
+                break
+            else:
+                print('Неверный формат ввода')
+        self.__verify_indx((x, y))
         self.__setitem__((x, y), self.HUMAN_X)
+        # Компьютер
         # x, y = choice(self.__coords_cell)
         # self.__setitem__((x, y), self.HUMAN_X)
 
     def computer_go(self):
         x, y = choice(self.__coords_cell)
         self.__setitem__((x, y), self.COMPUTER_O)
-        print(f"Ход компьютера: {x} {y}")
+        print(f"-> Ход компьютера : {x + 1}{y + 1}")
 
     def search_for_the_winner(self):
         n = self.__n
@@ -68,7 +78,9 @@ class TicTacToe:
 
     def __verify_indx(self, indx):
         if not all(type(i) == int and 0 <= i < self.__n for i in indx):
-            raise IndexError('некорректно указанные индексы')
+            print('некорректно указанные cтрока или столбец')
+            caller_function_name = inspect.currentframe().f_back.f_code.co_name  # Поиск функции которая вызвала этот метод
+            TicTacToe.__dict__[f"{caller_function_name}"](self)  # Вызываем ту функцию которая вызвала этот метод
 
     def __getitem__(self, item):
         self.__verify_indx(item)
@@ -81,7 +93,7 @@ class TicTacToe:
             self.__coords_cell.remove(key)
             self.search_for_the_winner()
         else:
-            print('клетка уже занята')
+            print('клетка уже занята!')
             caller_function_name = inspect.currentframe().f_back.f_code.co_name  # Поиск функции которая вызвала этот метод
             TicTacToe.__dict__[f"{caller_function_name}"](self)  # Вызываем ту функцию которая вызвала этот метод
 
@@ -89,12 +101,17 @@ class TicTacToe:
         return not any((self.__is_human_win, self.__is_computer_win, self.__is_draw))
 
     def show(self):  # отображает игровое поле в консоли
-        horizontal_line = ' ' * 3 + '┌' + '┬'.join(['─' * 5] * self.__n) + '┐'
-        divider_line = ' ' * 3 + '├' + '┼'.join(['─' * 5] * self.__n) + '┤'
-        bottom_line = ' ' * 3 + '└' + '┴'.join(['─' * 5] * self.__n) + '┘'
-        numeration_h = " " * 6 + "     ".join(map(str, range(0, self.__n)))
+        if self.welcome:
+            print('ДОБРО ПОЖАЛОВАТЬ В ИГРУ КРЕСТИКИ НОЛИКИ!')
+            print('Инфо (Формат ввода 12 = 1-Строка 2-Ряд)')
+            self.welcome = False
 
-        print("-" * 25)
+        horizontal_line = ' ' * 10 + '┌' + '┬'.join(['─' * 5] * self.__n) + '┐'
+        divider_line = ' ' * 10 + '├' + '┼'.join(['─' * 5] * self.__n) + '┤'
+        bottom_line = ' ' * 10 + '└' + '┴'.join(['─' * 5] * self.__n) + '┘'
+        numeration_h = " " * 13 + "     ".join(map(str, range(1, self.__n + 1)))
+
+        print("-" * 41)
         print(numeration_h)
         print(horizontal_line)
         for i, row in enumerate(self.pole):
@@ -106,28 +123,29 @@ class TicTacToe:
                     tmp.append("O")
                 else:
                     tmp.append(f" ")
-            row_str = '  │  '.join(tmp)
-            print(f'{i}  │  {row_str}  │  {i}')
+            ot = " " * 7
+
+            row_str = f'  │  '.join(tmp)
+            print(f'{ot}{i + 1}  │  {row_str}  │  {i + 1}')
             if i < len(self.pole) - 1:
                 print(divider_line)
         print(bottom_line)
         print(numeration_h)
-        print("-" * 25)
-
+        print("-" * 41)
 
 
 game = TicTacToe()
-game.init()
-
-step_game = 0
-
+step_game = randint(0, 1)
 while game:
     game.show()
+
     if step_game % 2 == 0:
         game.human_go()
     else:
         game.computer_go()
+
     step_game += 1
+
 game.show()
 
 if game.is_human_win:
