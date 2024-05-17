@@ -52,11 +52,6 @@ You can install the project locally by cloning this repository:
 git clone https://github.com/your_username/TicTacToe.git
 ```
 
-After cloning the repository, navigate to the project directory and install the dependencies using pip:
-
-```bash
-pip install -r requirements.txt
-```
 
 ## Usage
 
