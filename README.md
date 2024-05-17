@@ -49,7 +49,7 @@ To run this project, you need:
 You can install the project locally by cloning this repository:
 
 ```bash
-git clone https://github.com/your_username/tictactoe.git
+git clone https://github.com/your_username/TicTacToe.git
 ```
 
 After cloning the repository, navigate to the project directory and install the dependencies using pip:
