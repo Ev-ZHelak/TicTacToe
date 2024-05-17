@@ -4,7 +4,7 @@ Here's a README file template for your TicTacToe project:
 
 # TicTacToe Game
 
-This is a simple implementation of the TicTacToe game in Python.
+This is a simple implementation of the TicTacToe game in Python OOP.
 
 ## Table of Contents
 
