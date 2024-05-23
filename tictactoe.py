@@ -38,15 +38,15 @@ class TicTacToe:
 
     def human_go(self):
         while True:
+            x = y = None
             user_input = input('-> Ваш ход : ').strip()
             if len(user_input) == 2 and all(i.isdigit() for i in user_input):
-                x, y = map(int, user_input)
-                x -= 1
-                y -= 1
-                break
+                x, y = map(lambda a: int(a) - 1, user_input)
             else:
                 print('Неверный формат ввода')
-        self.__verify_indx((x, y))
+                continue
+            if self.__verify_indx((x, y)):
+                break
         self.__setitem__((x, y), self.HUMAN_X)
         # Компьютер
         # x, y = choice(self.__coords_cell)
@@ -79,8 +79,8 @@ class TicTacToe:
     def __verify_indx(self, indx):
         if not all(type(i) == int and 0 <= i < self.__n for i in indx):
             print('некорректно указанные cтрока или столбец')
-            caller_function_name = inspect.currentframe().f_back.f_code.co_name  # Поиск функции которая вызвала этот метод
-            TicTacToe.__dict__[f"{caller_function_name}"](self)  # Вызываем ту функцию которая вызвала этот метод
+            return False
+        return True
 
     def __getitem__(self, item):
         self.__verify_indx(item)
@@ -100,17 +100,20 @@ class TicTacToe:
     def __bool__(self):
         return not any((self.__is_human_win, self.__is_computer_win, self.__is_draw))
 
-    def show(self):  # отображает игровое поле в консоли
+    def show(self):
+        # Отображает игровое поле в консоли
         if self.welcome:
             print('ДОБРО ПОЖАЛОВАТЬ В ИГРУ КРЕСТИКИ НОЛИКИ!')
             print('Инфо (Формат ввода 12 = 1-Строка 2-Ряд)')
             self.welcome = False
 
+        # Создание строк для игрового поля
         horizontal_line = ' ' * 10 + '┌' + '┬'.join(['─' * 5] * self.__n) + '┐'
         divider_line = ' ' * 10 + '├' + '┼'.join(['─' * 5] * self.__n) + '┤'
         bottom_line = ' ' * 10 + '└' + '┴'.join(['─' * 5] * self.__n) + '┘'
         numeration_h = " " * 13 + "     ".join(map(str, range(1, self.__n + 1)))
 
+        # Вывод игрового поля
         print("-" * 41)
         print(numeration_h)
         print(horizontal_line)
@@ -122,16 +125,16 @@ class TicTacToe:
                 elif obj.value == self.COMPUTER_O:
                     tmp.append("O")
                 else:
-                    tmp.append(f" ")
-            ot = " " * 7
+                    tmp.append(" ")
 
-            row_str = f'  │  '.join(tmp)
-            print(f'{ot}{i + 1}  │  {row_str}  │  {i + 1}')
+            row_str = '  │  '.join(tmp)
+            print(f'{" " * 7}{i + 1}  │  {row_str}  │  {i + 1}')
             if i < len(self.pole) - 1:
                 print(divider_line)
         print(bottom_line)
         print(numeration_h)
         print("-" * 41)
+
 
 
 game = TicTacToe()
