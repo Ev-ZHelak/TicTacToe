@@ -66,8 +66,3 @@ Follow the on-screen instructions to play the game.
 ## Contributing
 
 Contributions are welcome! If you'd like to contribute to this project, please fork the repository and submit a pull request with your changes.
-
-
----
-
-Feel free to customize this README as needed for your project. Let me know if you need further assistance!
