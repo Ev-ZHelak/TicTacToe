@@ -1,4 +1,4 @@
-Here's a README file template for your TicTacToe project:
+TicTacToe project:
 
 ---
 
