@@ -49,7 +49,7 @@ To run this project, you need:
 You can install the project locally by cloning this repository:
 
 ```bash
-git clone https://github.com/your_username/TicTacToe.git
+git clone https://github.com/Ev-ZHelak/TicTacToe.git
 ```
 
 
